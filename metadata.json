@@ -1,0 +1,8 @@
+
+{
+  "name": "Skin Care OPD",
+  "description": "Professional healthcare and specialist appointment services in Brahmapur, Odisha, led by Prof. Dr. Antaryami Sahoo.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
