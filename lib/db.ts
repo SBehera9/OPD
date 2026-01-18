@@ -1,4 +1,4 @@
-
+// lib/db.ts
 import { Booking, Doctor, BookingStatus, ContactInquiry } from '../types';
 import { DOCTORS as INITIAL_DOCTORS } from '../constants';
 
@@ -6,35 +6,138 @@ const triggerSync = () => {
   window.dispatchEvent(new Event('storage'));
 };
 
+// Session timeout constants
+const ADMIN_SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes for security
+const LIVE_DISPLAY_TIMEOUT = 60 * 60 * 1000; // 60 minutes for live display
+const DOCTORS_SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+const INQUIRIES_SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+const FINANCIALS_SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+
+// Helper function for session checking
+const checkSession = (sessionKey: string, timeKey: string, timeout: number): boolean => {
+  const session = localStorage.getItem(sessionKey);
+  const sessionTime = localStorage.getItem(timeKey);
+  
+  if (!session || !sessionTime) {
+    localStorage.removeItem(sessionKey);
+    localStorage.removeItem(timeKey);
+    return false;
+  }
+  
+  const timeDiff = Date.now() - parseInt(sessionTime);
+  
+  if (timeDiff > timeout) {
+    localStorage.removeItem(sessionKey);
+    localStorage.removeItem(timeKey);
+    triggerSync();
+    return false;
+  }
+  return true;
+};
+
 export const MockDB = {
   // --- AUTHENTICATION ---
   login: (password: string): boolean => {
     if (password === 'admin123') {
       localStorage.setItem('opd_session', 'active_' + Date.now());
+      localStorage.setItem('opd_session_time', Date.now().toString());
+      triggerSync();
       return true;
     }
     return false;
   },
 
-  isLoggedIn: (): boolean => {
-    return !!localStorage.getItem('opd_session');
+  loginLiveDisplay: (password: string): boolean => {
+    if (password === 'display123') {
+      localStorage.setItem('opd_live_display_session', 'active_' + Date.now());
+      localStorage.setItem('opd_live_display_session_time', Date.now().toString());
+      triggerSync();
+      return true;
+    }
+    return false;
   },
 
+  loginDoctors: (password: string): boolean => {
+    if (password === 'admin123') {
+      localStorage.setItem('opd_doctors_session', 'active_' + Date.now());
+      localStorage.setItem('opd_doctors_session_time', Date.now().toString());
+      triggerSync();
+      return true;
+    }
+    return false;
+  },
+
+  loginInquiries: (password: string): boolean => {
+    if (password === 'admin123') {
+      localStorage.setItem('opd_inquiries_session', 'active_' + Date.now());
+      localStorage.setItem('opd_inquiries_session_time', Date.now().toString());
+      triggerSync();
+      return true;
+    }
+    return false;
+  },
+
+  loginFinancials: (password: string): boolean => {
+    if (password === 'admin123') {
+      localStorage.setItem('opd_financials_session', 'active_' + Date.now());
+      localStorage.setItem('opd_financials_session_time', Date.now().toString());
+      triggerSync();
+      return true;
+    }
+    return false;
+  },
+
+  // --- SESSION CHECKERS ---
+  isLoggedIn: (): boolean => {
+    return checkSession('opd_session', 'opd_session_time', ADMIN_SESSION_TIMEOUT);
+  },
+
+  isLiveDisplayLoggedIn: (): boolean => {
+    return checkSession('opd_live_display_session', 'opd_live_display_session_time', LIVE_DISPLAY_TIMEOUT);
+  },
+
+  isDoctorsLoggedIn: (): boolean => {
+    return checkSession('opd_doctors_session', 'opd_doctors_session_time', DOCTORS_SESSION_TIMEOUT);
+  },
+
+  isInquiriesLoggedIn: (): boolean => {
+    return checkSession('opd_inquiries_session', 'opd_inquiries_session_time', INQUIRIES_SESSION_TIMEOUT);
+  },
+
+  isFinancialsLoggedIn: (): boolean => {
+    return checkSession('opd_financials_session', 'opd_financials_session_time', FINANCIALS_SESSION_TIMEOUT);
+  },
+
+  // --- LOGOUT ---
   logout: () => {
     localStorage.removeItem('opd_session');
+    localStorage.removeItem('opd_session_time');
     localStorage.removeItem('financials_unlocked');
+    triggerSync();
   },
 
-  unlockFinancials: (password: string): boolean => {
-    if (password === 'admin123') {
-      localStorage.setItem('financials_unlocked', 'true');
-      return true;
-    }
-    return false;
+  logoutLiveDisplay: () => {
+    localStorage.removeItem('opd_live_display_session');
+    localStorage.removeItem('opd_live_display_session_time');
+    triggerSync();
   },
 
-  isFinancialsUnlocked: (): boolean => {
-    return localStorage.getItem('financials_unlocked') === 'true';
+  logoutDoctors: () => {
+    localStorage.removeItem('opd_doctors_session');
+    localStorage.removeItem('opd_doctors_session_time');
+    triggerSync();
+  },
+
+  logoutInquiries: () => {
+    localStorage.removeItem('opd_inquiries_session');
+    localStorage.removeItem('opd_inquiries_session_time');
+    triggerSync();
+  },
+
+  logoutFinancials: () => {
+    localStorage.removeItem('opd_financials_session');
+    localStorage.removeItem('opd_financials_session_time');
+    triggerSync();
   },
 
   // --- DATA MAINTENANCE ---
@@ -156,6 +259,13 @@ export const MockDB = {
     return JSON.parse(localStorage.getItem('opd_inquiries') || '[]');
   },
 
+  deleteInquiry: (id: string): void => {
+    const inquiries = MockDB.getInquiries();
+    const filtered = inquiries.filter(inq => inq.id !== id);
+    localStorage.setItem('opd_inquiries', JSON.stringify(filtered));
+    triggerSync();
+  },
+
   // --- ADVANCED REPORTING ---
   getDetailedReport: (filterType: 'day' | 'month' | 'year', value: string, search: string = '') => {
     const all = MockDB.getAllBookings();
@@ -196,6 +306,55 @@ export const MockDB = {
 
     return {
       summary: { totalRevenue, totalCash, totalOnline, patientCount: filtered.length },
+      doctorWise: Object.entries(doctorStats).map(([name, stats]) => ({ name, ...stats })),
+      rawList: filtered
+    };
+  },
+
+  getDateRangeReport: (startDate: string, endDate: string, search: string = '') => {
+    const all = MockDB.getAllBookings();
+    const filtered = all.filter(b => {
+      const bookingDate = b.date;
+      const matchesDate = bookingDate >= startDate && bookingDate <= endDate;
+      const matchesSearch = search === '' || 
+                          b.patientName.toLowerCase().includes(search.toLowerCase()) || 
+                          b.patientPhone.includes(search);
+                          
+      return matchesDate && matchesSearch;
+    });
+
+    const doctorStats: Record<string, any> = {};
+    let totalRevenue = 0;
+    let totalCash = 0;
+    let totalOnline = 0;
+
+    filtered.forEach(b => {
+      const docName = b.doctorName;
+      if (!doctorStats[docName]) {
+        doctorStats[docName] = { revenue: 0, cash: 0, online: 0, patients: 0 };
+      }
+      doctorStats[docName].revenue += b.fee;
+      doctorStats[docName].patients += 1;
+      totalRevenue += b.fee;
+      
+      if (b.paymentMode === 'Online') {
+        doctorStats[docName].online += b.fee;
+        totalOnline += b.fee;
+      } else {
+        doctorStats[docName].cash += b.fee;
+        totalCash += b.fee;
+      }
+    });
+
+    return {
+      summary: { 
+        totalRevenue, 
+        totalCash, 
+        totalOnline, 
+        patientCount: filtered.length,
+        startDate,
+        endDate
+      },
       doctorWise: Object.entries(doctorStats).map(([name, stats]) => ({ name, ...stats })),
       rawList: filtered
     };

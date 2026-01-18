@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -198,9 +197,9 @@ const Home: React.FC = () => {
       </section>
 
       {/* Download App Section */}
-      <section className="py-32 bg-slate-50">
+      <section className="py-32 bg-sky-950">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-sky-950 rounded-[80px] p-16 md:p-32 flex flex-col lg:flex-row items-center gap-20 overflow-hidden relative">
+          <div className="bg-sky-900 rounded-[80px] p-16 md:p-32 flex flex-col lg:flex-row items-center gap-20 overflow-hidden relative">
             <div className="relative z-10 lg:w-1/2">
                 <span className="text-sky-400 font-black uppercase tracking-widest text-xs mb-6 block">Stay Connected</span>
                 <h2 className="text-5xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-none">Download Our <br/> Health App</h2>
@@ -211,7 +210,7 @@ const Home: React.FC = () => {
                         Google Play
                     </button>
                     <button className="bg-white text-sky-950 px-10 py-5 rounded-[24px] font-black uppercase tracking-widest text-xs flex items-center gap-4 hover:bg-sky-400 hover:text-white transition-all">
-                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.1 2.48-1.34.03-1.77-.79-3.29-.79s-2 .77-3.27.82c-1.31.05-2.31-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87s2.2-.89 3.48-.76c.54.02 2.05.22 3.03 1.64-.08.05-1.81 1.05-1.79 3.19.02 2.56 2.22 3.42 2.25 3.43-.02.06-.35 1.21-1.19 2.45zM15.03 3.5c.56-.68.94-1.62.83-2.56-.81.03-1.79.54-2.37 1.23-.52.6-.97 1.56-.85 2.48.9.07 1.83-.47 2.39-1.15z"/></svg>
+                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.1 2.48-1.34.03-1.77-.79-3.29-.79s-2 .77-3.27.82c-1.31.05-2.31-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87s2.2-.89 3.48-.76c.54.02 2.05.22 3.03 1.64-.08.05-1.81 1.05-1.79 3.19.02 2.56 2.22 3.42 2.25 3.43-.02.06-.35 1.21-1.19 2.45z"/></svg>
                         App Store
                     </button>
                 </div>
@@ -231,12 +230,12 @@ const Home: React.FC = () => {
       </section>
 
       {/* Specialist Slider */}
-      <section className="py-40 bg-sky-950 text-white overflow-hidden relative">
+      <section className="py-40 bg-slate-50 text-white overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="mb-24">
-            <span className="text-sky-400 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Our Team</span>
-            <h2 className="text-5xl md:text-7xl font-black mb-10 tracking-tighter">Meet Our Specialists</h2>
-            <Link to="/doctors" className="bg-white text-sky-950 px-10 py-4 rounded-full font-black uppercase tracking-widest text-[10px] hover:bg-sky-400 hover:text-white transition-all inline-block">All Doctors</Link>
+            <span className="text-sky-600 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Our Team</span>
+            <h2 className="text-5xl md:text-7xl font-black text-sky-950 mb-10 tracking-tighter">Meet Our Specialists</h2>
+            <Link to="/doctors" className="bg-sky-600 text-white px-10 py-4 rounded-full font-black uppercase tracking-widest text-[10px] hover:bg-sky-700 transition-all inline-block">All Doctors</Link>
           </div>
 
           <div className="flex flex-wrap gap-8">
@@ -247,14 +246,14 @@ const Home: React.FC = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.2 }}
-                className="flex-1 min-w-[300px] bg-white/5 backdrop-blur-3xl rounded-[64px] p-10 border border-white/10 hover:bg-white/10 transition-all group"
+                className="flex-1 min-w-[300px] bg-white p-10 rounded-[64px] border border-sky-100 hover:shadow-2xl transition-all group"
               >
-                <div className="w-full h-80 rounded-[48px] overflow-hidden mb-10 border-4 border-white/10">
+                <div className="w-full h-80 rounded-[48px] overflow-hidden mb-10 border-4 border-sky-100">
                   <img src={doc.image} alt={doc.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
                 </div>
-                <span className="text-sky-400 font-black uppercase tracking-widest text-[9px] mb-2 block">{doc.specialty}</span>
-                <h4 className="text-3xl font-black mb-6 tracking-tight">{doc.name}</h4>
-                <Link to={`/doctors`} className="text-white font-black uppercase tracking-[0.2em] text-[10px] hover:text-sky-400 transition-colors">Full Profile →</Link>
+                <span className="text-sky-600 font-black uppercase tracking-widest text-[9px] mb-2 block">{doc.specialty}</span>
+                <h4 className="text-3xl font-black text-sky-950 mb-6 tracking-tight">{doc.name}</h4>
+                <Link to={`/doctors`} className="text-sky-600 font-black uppercase tracking-[0.2em] text-[10px] hover:text-sky-800 transition-colors">Full Profile →</Link>
               </motion.div>
             ))}
           </div>

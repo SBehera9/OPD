@@ -12,6 +12,7 @@ import Admin from './pages/Admin';
 import WaitingHall from './pages/WaitingHall';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import EV from './pages/EV';
 
 // Component to handle scroll restoration on navigation
 const ScrollToTop = () => {
@@ -36,11 +37,39 @@ const InstagramIcon = () => (
   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z M17.5 6.5h.01 M7.5 2h9A5.5 5.5 0 0122 7.5v9a5.5 5.5 0 01-5.5 5.5h-9A5.5 5.5 0 012 16.5v-9A5.5 5.5 0 017.5 2z" /></svg>
 );
 
+const LiveDisplayIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+  </svg>
+);
+
+const WhatsAppIcon = () => (
+  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 2C6.48 2 2 6.48 2 12c0 1.96.6 3.78 1.62 5.28L2 22l4.72-1.62c1.5 1.02 3.32 1.62 5.28 1.62 5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.48 0-2.86-.41-4.06-1.12l-.72-.43-3.02.82.82-3.02-.43-.72C4.41 14.86 4 13.48 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.5-6.5c-.28 0-.5-.22-.5-.5 0-.28.22-.5.5-.5s.5.22.5.5c0 .28-.22.5-.5.5zm-7 0c-.28 0-.5-.22-.5-.5 0-.28.22-.5.5-.5s.5.22.5.5c0 .28-.22.5-.5.5zm3.5 0c-.28 0-.5-.22-.5-.5 0-.28.22-.5.5-.5s.5.22.5.5c0 .28-.22.5-.5.5z"/>
+  </svg>
+);
+
 const SOCIAL_LINKS = [
   { icon: <FacebookIcon />, label: 'Facebook', href: '#' },
   { icon: <TwitterIcon />, label: 'Twitter', href: '#' },
   { icon: <InstagramIcon />, label: 'Instagram', href: '#' },
 ];
+
+const WhatsAppFloatButton = () => (
+  <motion.a
+    href="https://wa.me/919040901236"
+    target="_blank"
+    rel="noopener noreferrer"
+    initial={{ scale: 0, opacity: 0 }}
+    animate={{ scale: 1, opacity: 1 }}
+    whileHover={{ scale: 1.1 }}
+    whileTap={{ scale: 0.9 }}
+    className="fixed bottom-8 right-8 z-50 bg-emerald-500 text-white p-4 rounded-full shadow-2xl shadow-emerald-500/30 hover:bg-emerald-600 transition-colors"
+    aria-label="Chat on WhatsApp"
+  >
+    <WhatsAppIcon />
+  </motion.a>
+);
 
 const TopBar = () => (
   <div className="bg-sky-950 text-white text-[11px] font-bold tracking-[0.1em] uppercase py-2.5 px-6 hidden md:flex justify-between items-center border-b border-white/5">
@@ -62,7 +91,9 @@ const TopBar = () => (
           </a>
         ))}
       </div>
-      <Link to="/admin" className="text-[9px] border border-white/20 px-2 py-1 rounded hover:bg-white/10 transition-colors">Staff Login</Link>
+      <div className="flex items-center gap-4">
+        <Link to="/admin" className="text-[9px] border border-white/20 px-2 py-1 rounded hover:bg-white/10 transition-colors">Staff Login</Link>
+      </div>
     </div>
   </div>
 );
@@ -105,15 +136,19 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className={`text-[13px] font-bold tracking-wide transition-all relative py-2 ${
-                  isActive(link.path) ? 'text-sky-600' : 'text-slate-600 hover:text-sky-500'
+                className={`text-[13px] font-bold tracking-wide transition-all relative py-2 group ${
+                  isActive(link.path) 
+                    ? 'text-sky-600' 
+                    : 'text-slate-600 hover:text-sky-500'
                 }`}
               >
-                {link.name}
+                <div className="flex items-center gap-2">
+                  {link.name}
+                </div>
                 {isActive(link.path) && (
                   <motion.div 
                     layoutId="nav-underline"
-                    className="absolute bottom-0 left-0 w-full h-0.5 bg-sky-500 rounded-full"
+                    className="absolute bottom-0 left-0 w-full h-0.5 rounded-full bg-sky-500"
                   />
                 )}
               </Link>
@@ -146,19 +181,21 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className="text-lg font-bold text-sky-900 hover:text-sky-600"
+                className="flex items-center gap-3 text-lg font-bold text-sky-900 hover:text-sky-600"
                 onClick={() => setIsOpen(false)}
               >
                 {link.name}
               </Link>
             ))}
-            <Link
-              to="/appointment"
-              className="bg-sky-600 text-white text-center px-6 py-4 rounded-2xl font-bold text-lg"
-              onClick={() => setIsOpen(false)}
-            >
-              Book Appointment
-            </Link>
+            <div className="flex flex-col gap-4">
+              <Link
+                to="/appointment"
+                className="bg-sky-600 text-white text-center px-6 py-4 rounded-2xl font-bold text-lg"
+                onClick={() => setIsOpen(false)}
+              >
+                Book Appointment
+              </Link>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -204,16 +241,22 @@ const Footer = () => (
         <ul className="space-y-4 text-sky-100/60 font-bold">
           <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
           <li><Link to="/doctors" className="hover:text-white transition-colors">Our Doctors</Link></li>
-          <li><Link to="/waiting-hall" className="hover:text-white transition-colors text-sky-400">Live Waiting Hall</Link></li>
+          <li>
+            <Link to="/waiting-hall" className="hover:text-white transition-colors text-emerald-400 flex items-center gap-2">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+              Live Waiting Hall
+            </Link>
+          </li>
         </ul>
       </div>
 
       <div>
-        <h4 className="text-lg font-bold mb-8 text-sky-400 uppercase tracking-widest">Legal</h4>
+        <h4 className="text-lg font-bold mb-8 text-sky-400 uppercase tracking-widest">Services</h4>
         <ul className="space-y-4 text-sky-100/60 font-bold">
-          <li><Link to="/contact" className="hover:text-white transition-colors">Contact Support</Link></li>
-          <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-          <li><Link to="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link></li>
+          <li><Link to="/appointment" className="hover:text-white transition-colors">Online Appointment</Link></li>
+          <li><Link to="/department" className="hover:text-white transition-colors">Specialties</Link></li>
+          <li><Link to="/gallery" className="hover:text-white transition-colors">Clinic Gallery</Link></li>
+          <li><Link to="/ev" className="hover:text-white transition-colors">Exide EV</Link></li>
         </ul>
       </div>
 
@@ -270,8 +313,10 @@ const App: React.FC = () => {
               <Route path="/waiting-hall" element={<PageWrapper><WaitingHall /></PageWrapper>} />
               <Route path="/privacy-policy" element={<PageWrapper><PrivacyPolicy /></PageWrapper>} />
               <Route path="/terms-of-service" element={<PageWrapper><TermsOfService /></PageWrapper>} />
+              <Route path="/ev" element={<PageWrapper><EV /></PageWrapper>} />
             </Routes>
           </AnimatePresence>
+          <WhatsAppFloatButton />
         </main>
         <Footer />
       </div>

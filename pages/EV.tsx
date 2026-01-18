@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-const ExideEV: React.FC = () => {
+const EV: React.FC = () => {
   return (
-    <div>
+    <div className="bg-slate-50 min-h-screen">
       <div className="bg-sky-950 text-white py-32 px-4 text-center relative overflow-hidden">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="relative z-10">
           <h1 className="text-6xl font-black mb-4 tracking-tight">Exide Electric Vehicles</h1>
@@ -47,4 +46,4 @@ const ExideEV: React.FC = () => {
   );
 };
 
-export default ExideEV;
+export default EV;
