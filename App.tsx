@@ -286,7 +286,7 @@ const Footer = () => (
     </div>
     
     <div className="max-w-7xl mx-auto px-6 mt-24 pt-12 border-t border-white/5 text-center text-sky-500/50 text-xs font-bold tracking-widest uppercase">
-      <p>Copyright © 2024 Skin Care OPD. Design By - aceit</p>
+      <p>Copyright © 2026 Skin Care OPD. Design By - SB</p>
     </div>
     <div className="absolute bottom-0 right-0 w-96 h-96 bg-sky-500/5 rounded-full blur-[120px]"></div>
   </footer>
