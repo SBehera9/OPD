@@ -196,7 +196,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Download App Section */}
+      {/* Download App Section
       <section className="py-32 bg-sky-950">
         <div className="max-w-7xl mx-auto px-6">
           <div className="bg-sky-900 rounded-[80px] p-16 md:p-32 flex flex-col lg:flex-row items-center gap-20 overflow-hidden relative">
@@ -227,7 +227,7 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Specialist Slider */}
       <section className="py-40 bg-slate-50 text-white overflow-hidden relative">
